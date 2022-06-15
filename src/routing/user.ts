@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import connection from '@src/connection';
 
-const router = Router();
+const userRoute = Router();
 
-router.get('/', async (req, res, next) => {
+userRoute.get('/', async (req, res, next) => {
   try {
     // Logic Here
   } catch (err) {
@@ -12,4 +12,4 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-export { router as apiUser };
+export { userRoute };

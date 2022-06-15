@@ -3,15 +3,17 @@ import express, { Response } from 'express';
 import morgan from 'morgan';
 import createError, { HttpError } from 'http-errors';
 import connection from './connection';
-import { apiUser } from '@src/routing';
+import { userRoute, authRoute } from '@src/routing';
+import * as auth from '@middlewares/auth';
 
 const app = express();
 
 // Middleware
 app.use(express.json(), morgan('dev'));
 
-// Routing
-app.use('/api/user', apiUser);
+// Routing Middleware
+app.use('/api/auth', authRoute);
+app.use('/api/user', auth as any, userRoute);
 
 // Setup Automatic Error
 app.use((_, __, next) => {

@@ -1,1 +1,2 @@
-export { apiUser } from './apiUser';
+export { userRoute } from './user';
+export { authRoute } from './auth';
