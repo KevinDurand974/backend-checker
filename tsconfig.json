@@ -6,7 +6,8 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@types": ["src/types"]
     },
     "outDir": "./dist",
     "strict": true,

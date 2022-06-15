@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json(), morgan('dev'));
 
 // Routing
-app.use(apiUser);
+app.use('/api/user', apiUser);
 
 // Setup Automatic Error
 app.use((_, __, next) => {
