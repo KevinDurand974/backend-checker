@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
 
 export type Payload = {
   email: string;
@@ -7,4 +6,10 @@ export type Payload = {
   name: string;
 };
 
-export type CustomRequest = Request & { payload: Payload };
+export type RegisterData = {
+  email: string;
+  password: string;
+};
+
+export type PayloadRequest = Request & { payload: Payload };
+export type RegisterRequest = Request & { data: RegisterData };

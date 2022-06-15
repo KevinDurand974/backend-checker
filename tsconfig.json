@@ -9,6 +9,7 @@
       "@types": ["src/types"],
       "@helpers/*": ["src/helpers/*"],
       "@middlewares/*": ["src/middlewares/*"],
+      "@models/*": ["src/models/*"],
       "@src/*": ["src/*"]
     },
     "outDir": "./dist",

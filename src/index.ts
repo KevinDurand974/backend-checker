@@ -4,12 +4,13 @@ import morgan from 'morgan';
 import createError, { HttpError } from 'http-errors';
 import connection from './connection';
 import { userRoute, authRoute } from '@src/routing';
-import * as auth from '@middlewares/auth';
+import auth from '@middlewares/auth';
 
 const app = express();
 
 // Middleware
-app.use(express.json(), morgan('dev'));
+app.use(express.json());
+app.use(morgan('dev'));
 
 // Routing Middleware
 app.use('/api/auth', authRoute);
@@ -29,11 +30,12 @@ app.use((err: HttpError, _: any, res: Response, __: any) => {
 });
 
 // Launch backend
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 app.listen(port, async () => {
   try {
     await connection.connect();
-    console.log(`App Started on: http://localhost:${port}`, `Connected on DB with ID: ${connection.threadId}`);
+    console.log(`App Started on: http://localhost:${port}`);
+    console.log(`Connected on DB with ID: ${connection.threadId}`);
   } catch (err: any) {
     console.error(err.stack);
   }
