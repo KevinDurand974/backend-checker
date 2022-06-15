@@ -1,0 +1,7 @@
+{
+  "ext": "ts,js,json,graphql",
+  "execMap": {
+    "ts": "ts-node -r tsconfig-paths/register",
+    "js": "node -r tsconfig-paths/register"
+  }
+}
