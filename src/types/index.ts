@@ -8,5 +8,3 @@ export type Payload = {
 };
 
 export type CustomRequest = Request & { payload: Payload };
-
-export type CustomPayload = JwtPayload & Payload;

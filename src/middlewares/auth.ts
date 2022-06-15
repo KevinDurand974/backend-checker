@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import createError from 'http-errors';
 import { NextFunction, Request, Response } from 'express';
-import { CustomPayload, CustomRequest } from '@types';
+import { CustomRequest } from '@types';
 
 const defaultError = {
   code: 401,
@@ -15,13 +15,13 @@ export default (req: CustomRequest, res: Response, next: NextFunction) => {
     if (!req.headers.authorization.startsWith('Bearer')) throw createError(defaultError.code, defaultError.message);
     const token = req.headers.authorization.split(' ')[1];
 
-    jwt.verify(token, process.env.PRIVATE_KEY!, (err, payload) => {
+    jwt.verify(token, process.env.PRIVATE_KEY!, (err, payload: any) => {
       if (err) throw createError(defaultError.code, defaultError.message);
       if (!payload) throw createError(defaultError.code, defaultError.message);
       req.payload = {
-        email: (payload as CustomPayload).email,
-        id: (payload as CustomPayload).id,
-        name: (payload as CustomPayload).name,
+        email: payload.email,
+        id: payload.id,
+        name: payload.name,
       };
       next();
     });
