@@ -1,7 +1,8 @@
-import { Router } from 'express';
+import { comparePassword, generateAccessToken, hashPassword } from '@helpers/auth';
 import { validateRegisterData } from '@helpers/validator';
-import { hashPassword } from '@helpers/auth';
-import { createUser } from '@src/models/user';
+import { createOneUser, selectOneUser } from '@models/user';
+import { Router } from 'express';
+import createError from 'http-errors';
 
 const authRoute = Router();
 
@@ -10,12 +11,29 @@ authRoute.post('/register', async (req, res, next) => {
   try {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
     const hashedPassword = await hashPassword(password);
-    const data = await createUser({ email, password: hashedPassword });
-    if (!data) throw new Error('Unknow error!');
+    const data = await createOneUser({ email, password: hashedPassword });
+    if (!data) throw new Error('An error occurred, pleaze try again.');
     res.status(200).json({
       status: 200,
       message: 'User successfully created!',
       data: data,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Login an User
+authRoute.post('/login', async (req, res, next) => {
+  try {
+    const { email, password, name } = await selectOneUser(req.body.email);
+    const checkPassword = comparePassword(req.body.password, password);
+    if (!checkPassword) throw createError(403, 'Email or password is invalid, try again.');
+    const token = generateAccessToken({ email, name });
+    res.status(200).json({
+      status: 200,
+      message: 'User successfully logged in!',
+      data: token,
     });
   } catch (err) {
     next(err);

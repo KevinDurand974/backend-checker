@@ -2,11 +2,16 @@ import { Request } from 'express';
 
 export type Payload = {
   email: string;
-  id: string;
   name: string;
 };
 
 export type RegisterData = {
+  email: string;
+  password: string;
+};
+
+export type UpdateUserData = {
+  name: string;
   email: string;
   password: string;
 };

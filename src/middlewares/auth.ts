@@ -20,7 +20,6 @@ export default (req: PayloadRequest, res: Response, next: NextFunction) => {
       if (!payload) throw createError(defaultError.code, defaultError.message);
       req.payload = {
         email: payload.email,
-        id: payload.id,
         name: payload.name,
       };
       next();
