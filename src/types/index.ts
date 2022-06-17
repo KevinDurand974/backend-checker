@@ -16,6 +16,8 @@ export type Music = {
   updatedAt: Date;
 };
 
+export type MusicKeys = keyof Music;
+
 export type UpdateUserData = {
   name: string;
   email: string;

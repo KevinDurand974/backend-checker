@@ -1,6 +1,6 @@
 import { comparePassword, generateAccessToken, hashPassword } from '@helpers/auth';
 import { validateRegisterData } from '@helpers/validator';
-import { createOneUser, selectOneUser } from '@models/user';
+import { addOneUser, selectOneUser } from '@models/user';
 import { Router } from 'express';
 import createError from 'http-errors';
 
@@ -11,7 +11,7 @@ authRoute.post('/register', async (req, res, next) => {
   try {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
     const hashedPassword = await hashPassword(password!);
-    const data = await createOneUser({ email, password: hashedPassword, admin: false });
+    const data = await addOneUser({ email, password: hashedPassword, admin: false });
     if (!data) throw new Error('An error occurred, pleaze try again.');
     res.status(200).json({
       status: 200,
@@ -27,7 +27,7 @@ authRoute.post('/register/admin', async (req, res, next) => {
   try {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
     const hashedPassword = await hashPassword(password!);
-    const data = await createOneUser({ email, password: hashedPassword, admin: true });
+    const data = await addOneUser({ email, password: hashedPassword, admin: true });
     if (!data) throw new Error('An error occurred, pleaze try again.');
     res.status(200).json({
       status: 200,

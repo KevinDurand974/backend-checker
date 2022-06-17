@@ -21,7 +21,11 @@ userRoute.put('/:id', async (req, res, next) => {
 userRoute.get('/:id', async (req, res, next) => {
   try {
     const user = await selectOneUserByID(+req.params.id);
-    if (!user) throw new Error('An error occurred, pleaze try again.');
+    if (!user)
+      return res.status(404).json({
+        status: 404,
+        message: 'No user found!',
+      });
     res.status(200).json({
       status: 200,
       message: 'User found!',
@@ -36,7 +40,11 @@ userRoute.get('/:id', async (req, res, next) => {
 userRoute.get('/', async (req, res, next) => {
   try {
     const users = await selectManyUser();
-    if (!users) throw new Error('An error occurred, pleaze try again.');
+    if (!users)
+      return res.status(404).json({
+        status: 404,
+        message: 'No user found!',
+      });
     res.status(200).json({
       status: 200,
       message: 'All user found!',

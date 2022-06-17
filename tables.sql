@@ -11,7 +11,7 @@ CREATE TABLE musics (
   title VARCHAR(255) NOT NULL,
   artist VARCHAR(255) NOT NULL,
   createdAt datetime DEFAULT NOW(),
-  updatedAt datetime DEFAULT NOW(),
+  updatedAt datetime DEFAULT NOW() ON UPDATE NOW(),
   PRIMARY KEY (id)
 ) ENGINE=INNODB;
 CREATE TABLE user_musics (
