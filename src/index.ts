@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express, { Response } from 'express';
 import morgan from 'morgan';
 import createError, { HttpError } from 'http-errors';
+import cookieParser from 'cookie-parser';
 import connection from './connection';
 import { userRoute, authRoute } from '@src/routing';
 import auth from '@middlewares/auth';
@@ -11,6 +12,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // Routing Middleware
 app.use('/api/auth', authRoute);
@@ -25,7 +27,6 @@ app.use((err: HttpError, _: any, res: Response, __: any) => {
   res.json({
     status: err.status || 500,
     message: err.message,
-    success: false,
   });
 });
 

@@ -68,7 +68,7 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, id: number) =
 export const selectOneUserByID = async (id: number) => {
   try {
     const countData = (await connection.query('SELECT * FROM users WHERE id = ?', [id])) as RowDataPacket[][];
-    if (!countData[0].length) throw createError(403, 'User not found!');
+    if (!countData[0].length) throw createError(500, 'User not found!');
     return countData[0][0];
   } catch (error: any) {
     if (error instanceof HttpError) throw error;
@@ -79,7 +79,7 @@ export const selectOneUserByID = async (id: number) => {
 export const selectManyUser = async () => {
   try {
     const countData = (await connection.query('SELECT * FROM users')) as RowDataPacket[][];
-    if (!countData[0].length) throw createError(403, 'No user found!');
+    if (!countData[0].length) throw createError(500, 'No user found!');
     return countData[0];
   } catch (error: any) {
     if (error instanceof HttpError) throw error;

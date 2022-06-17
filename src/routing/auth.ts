@@ -16,7 +16,6 @@ authRoute.post('/register', async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: 'User successfully created!',
-      data: data,
     });
   } catch (err) {
     next(err);
@@ -30,14 +29,33 @@ authRoute.post('/login', async (req, res, next) => {
     const checkPassword = comparePassword(req.body.password, password);
     if (!checkPassword) throw createError(403, 'Email or password is invalid, try again.');
     const token = generateAccessToken({ email, name });
-    res.status(200).json({
-      status: 200,
-      message: 'User successfully logged in!',
-      data: token,
-    });
+    res
+      .cookie('ut', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      })
+      .status(200)
+      .json({
+        status: 200,
+        message: 'User successfully logged in!',
+      });
   } catch (err) {
     next(err);
   }
+});
+
+// Logout an User
+authRoute.get('/logout', (_, res) => {
+  res
+    .cookie('ut', '', {
+      httpOnly: true,
+      expires: new Date(Date.now() - 1),
+    })
+    .status(200)
+    .json({
+      status: 200,
+      message: 'User successfully logged out!',
+    });
 });
 
 export { authRoute };
