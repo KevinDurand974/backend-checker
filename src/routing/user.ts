@@ -1,5 +1,12 @@
 import { selectAllMusicFromUser } from '@models/music';
-import { addOneMusicToUser, removeMusicFromUser, selectManyUser, selectOneUserByID, updateOneUser } from '@models/user';
+import {
+  addOneMusicToUser,
+  removeMusicFromUser,
+  removeOneUserById,
+  selectManyUser,
+  selectOneUserByID,
+  updateOneUser,
+} from '@models/user';
 import { PayloadRequest } from '@types';
 import { Router } from 'express';
 
@@ -62,6 +69,42 @@ userRoute.get('/:id', async (req, res, next) => {
   }
 });
 
+// Remove a music from an user
+userRoute.delete('/music', async (req, res, next) => {
+  try {
+    const deleted = await removeMusicFromUser(req.body.music_id, (req as PayloadRequest).payload.user_id!);
+    if (!deleted)
+      return res.status(500).json({
+        status: 500,
+        message: 'An error occurred, please try again.',
+      });
+    res.status(200).json({
+      status: 200,
+      message: 'Music successfully removed from user!',
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Remove an user
+userRoute.delete('/:id', async (req, res, next) => {
+  try {
+    const user = await removeOneUserById(+req.params.id);
+    if (!user)
+      return res.status(404).json({
+        status: 404,
+        message: 'No user found!',
+      });
+    res.status(200).json({
+      status: 200,
+      message: 'User removed!',
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Update an User
 userRoute.put('/:id', async (req, res, next) => {
   try {
@@ -92,24 +135,6 @@ userRoute.post('/music', async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: 'Music successfully added to user!',
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// Remove a music form an user
-userRoute.delete('/music', async (req, res, next) => {
-  try {
-    const deleted = await removeMusicFromUser(req.body.music_id, (req as PayloadRequest).payload.user_id!);
-    if (!deleted)
-      return res.status(500).json({
-        status: 500,
-        message: 'An error occurred, please try again.',
-      });
-    res.status(200).json({
-      status: 200,
-      message: 'Music successfully removed from user!',
     });
   } catch (err) {
     next(err);

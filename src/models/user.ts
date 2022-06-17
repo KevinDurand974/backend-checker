@@ -3,6 +3,7 @@ import { UpdateUserData, User } from '@types';
 import createError, { HttpError } from 'http-errors';
 import { RowDataPacket } from 'mysql2';
 
+// Select an user with his email
 export const selectOneUser = async (email: string) => {
   try {
     const countData = (await connection.query(
@@ -18,6 +19,7 @@ export const selectOneUser = async (email: string) => {
   }
 };
 
+// Select an user with his ID
 export const selectOneUserByID = async (user_id: number) => {
   try {
     const countData = (await connection.query('SELECT * FROM users WHERE users.user_id = ?', [
@@ -31,6 +33,7 @@ export const selectOneUserByID = async (user_id: number) => {
   }
 };
 
+// Select all users
 export const selectManyUser = async () => {
   try {
     const countData = (await connection.query('SELECT * FROM users')) as RowDataPacket[][];
@@ -42,6 +45,7 @@ export const selectManyUser = async () => {
   }
 };
 
+// Add an user
 export const addOneUser = async ({ email, password, admin }: Partial<User>) => {
   try {
     const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE email = ?', [
@@ -63,6 +67,7 @@ export const addOneUser = async ({ email, password, admin }: Partial<User>) => {
   }
 };
 
+// Add a music to an user
 export const addOneMusicToUser = async (music_id: number, user_id: number) => {
   try {
     const [addMusic] = (await connection.query('INSERT INTO user_musics (user_id, music_id) VALUES (?, ?)', [
@@ -77,6 +82,7 @@ export const addOneMusicToUser = async (music_id: number, user_id: number) => {
   }
 };
 
+// Update an user
 export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: number) => {
   try {
     const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
@@ -103,6 +109,7 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: numb
   }
 };
 
+// Remove an user
 export const removeOneUserById = async (id: number) => {
   try {
     const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
@@ -110,7 +117,7 @@ export const removeOneUserById = async (id: number) => {
     ])) as RowDataPacket[][];
     if (!userDb.count) throw createError(404, 'Error, this user doesnt exist.');
 
-    const [del] = (await connection.query('DELETE FROM users WHERE id = ?', [id])) as RowDataPacket[];
+    const [del] = (await connection.query('DELETE FROM users WHERE user_id = ?', [id])) as RowDataPacket[];
     if (!del.affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
@@ -119,8 +126,15 @@ export const removeOneUserById = async (id: number) => {
   }
 };
 
+// Remove a music from an user
 export const removeMusicFromUser = async (music_id: string, user_id: number) => {
   try {
+    const [[umDb]] = (await connection.query(
+      'SELECT COUNT(*) as count FROM user_musics WHERE user_id = ? AND music_id = ?',
+      [user_id, music_id]
+    )) as RowDataPacket[][];
+    if (!umDb.count) throw createError(404, 'Error, this user doesnt exist.');
+
     const [removeMusic] = (await connection.query('DELETE FROM user_musics WHERE user_id = ? AND music_id = ?', [
       user_id,
       music_id,
