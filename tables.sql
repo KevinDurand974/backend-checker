@@ -3,6 +3,7 @@ CREATE TABLE users (
   name VARCHAR(80),
   password VARCHAR(40) NOT NULL,
   email VARCHAR(255) NOT NULL,
+  admin INT DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=INNODB;
 CREATE TABLE musics (

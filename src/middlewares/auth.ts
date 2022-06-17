@@ -18,6 +18,7 @@ export default (req: PayloadRequest, res: Response, next: NextFunction) => {
       req.payload = {
         email: payload.email,
         name: payload.name,
+        admin: payload.admin,
       };
       next();
     });

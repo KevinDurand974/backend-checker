@@ -1,19 +1,20 @@
 import connection from '@src/connection';
-import { RegisterData, UpdateUserData } from '@types';
+import { UpdateUserData, User } from '@types';
 import { HttpError } from 'http-errors';
 import createError from 'http-errors';
 import { RowDataPacket } from 'mysql2';
 
-export const createOneUser = async ({ email, password }: RegisterData) => {
+export const createOneUser = async ({ email, password, admin }: Partial<User>) => {
   try {
     const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE email = ?', [
       email,
     ])) as RowDataPacket[][];
     if (countData[0][0].count) throw createError(403, 'User already exist!');
 
-    const insertData = (await connection.query('INSERT INTO users (email, password) VALUES (?, ?)', [
+    const insertData = (await connection.query('INSERT INTO users (email, password, admin) VALUES (?, ?, ?)', [
       email,
       password,
+      admin,
     ])) as RowDataPacket[];
 
     if (!insertData[0].affectedRows) throw createError(500, 'An error occurred, pleaze try again.');

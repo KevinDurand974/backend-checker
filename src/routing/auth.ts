@@ -10,8 +10,24 @@ const authRoute = Router();
 authRoute.post('/register', async (req, res, next) => {
   try {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
-    const hashedPassword = await hashPassword(password);
-    const data = await createOneUser({ email, password: hashedPassword });
+    const hashedPassword = await hashPassword(password!);
+    const data = await createOneUser({ email, password: hashedPassword, admin: false });
+    if (!data) throw new Error('An error occurred, pleaze try again.');
+    res.status(200).json({
+      status: 200,
+      message: 'User successfully created!',
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Register an User Admin
+authRoute.post('/register/admin', async (req, res, next) => {
+  try {
+    const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
+    const hashedPassword = await hashPassword(password!);
+    const data = await createOneUser({ email, password: hashedPassword, admin: true });
     if (!data) throw new Error('An error occurred, pleaze try again.');
     res.status(200).json({
       status: 200,
@@ -25,10 +41,10 @@ authRoute.post('/register', async (req, res, next) => {
 // Login an User
 authRoute.post('/login', async (req, res, next) => {
   try {
-    const { email, password, name } = await selectOneUser(req.body.email);
+    const { email, password, name, admin } = await selectOneUser(req.body.email);
     const checkPassword = comparePassword(req.body.password, password);
     if (!checkPassword) throw createError(403, 'Email or password is invalid, try again.');
-    const token = generateAccessToken({ email, name });
+    const token = generateAccessToken({ email, name, admin });
     res
       .cookie('ut', token, {
         httpOnly: true,

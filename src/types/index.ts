@@ -1,13 +1,19 @@
 import { Request } from 'express';
 
-export type Payload = {
+export type User = {
+  id?: number;
   email: string;
   name: string;
+  password?: string;
+  admin?: boolean;
 };
 
-export type RegisterData = {
-  email: string;
-  password: string;
+export type Music = {
+  id: number;
+  title: string;
+  artist: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type UpdateUserData = {
@@ -16,5 +22,4 @@ export type UpdateUserData = {
   password: string;
 };
 
-export type PayloadRequest = Request & { payload: Payload };
-export type RegisterRequest = Request & { data: RegisterData };
+export type PayloadRequest = Request & { payload: User };

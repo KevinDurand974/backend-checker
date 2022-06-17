@@ -1,4 +1,4 @@
-import { RegisterData } from '@types';
+import { User } from '@types';
 import Joi from 'joi';
 
 // Register Data Schema
@@ -18,6 +18,6 @@ const registerSchema = () => {
 };
 
 // Register Validator
-export const validateRegisterData = async (data: RegisterData): Promise<RegisterData> => {
+export const validateRegisterData = async (data: Partial<User>): Promise<User> => {
   return registerSchema().validateAsync(data);
 };
