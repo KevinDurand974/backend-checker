@@ -6,7 +6,7 @@ import { RowDataPacket } from 'mysql2';
 export const selectOneUser = async (email: string) => {
   try {
     const countData = (await connection.query(
-      'SELECT COUNT(*) as count, email, password, name FROM users WHERE email = ?',
+      'SELECT COUNT(*) as count, email, password, name, user_id, admin FROM users WHERE email = ?',
       [email]
     )) as RowDataPacket[][];
     if (!countData[0][0].count) throw createError(403, "User doesn't exist!");
@@ -18,9 +18,11 @@ export const selectOneUser = async (email: string) => {
   }
 };
 
-export const selectOneUserByID = async (id: number) => {
+export const selectOneUserByID = async (user_id: number) => {
   try {
-    const countData = (await connection.query('SELECT * FROM users WHERE id = ?', [id])) as RowDataPacket[][];
+    const countData = (await connection.query('SELECT * FROM users WHERE users.user_id = ?', [
+      user_id,
+    ])) as RowDataPacket[][];
     const user = countData[0][0];
     return countData[0].length ? { ...user, admin: !!user.admin } : user;
   } catch (error: any) {
@@ -40,19 +42,6 @@ export const selectManyUser = async () => {
   }
 };
 
-export const selectManyUserMusic = async (user_id: number) => {
-  try {
-    const [musicList] = (await connection.query(
-      'SELECT * FROM user_musics INNER JOIN users ON users.id = user_musics.user_id INNER JOIN musics ON musics.id = user_musics.music_id WHERE user_id = ?',
-      [user_id]
-    )) as RowDataPacket[][];
-    return musicList;
-  } catch (error: any) {
-    if (error instanceof HttpError) throw error;
-    throw createError(500, error.message);
-  }
-};
-
 export const addOneUser = async ({ email, password, admin }: Partial<User>) => {
   try {
     const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE email = ?', [
@@ -66,7 +55,7 @@ export const addOneUser = async ({ email, password, admin }: Partial<User>) => {
       admin,
     ])) as RowDataPacket[];
 
-    if (!insertData[0].affectedRows) throw createError(500, 'An error occurred, pleaze try again.');
+    if (!insertData[0].affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
     if (error instanceof HttpError) throw error;
@@ -74,13 +63,13 @@ export const addOneUser = async ({ email, password, admin }: Partial<User>) => {
   }
 };
 
-export const addOneMusicToUser = async (music_id: string, user_id: string) => {
+export const addOneMusicToUser = async (music_id: number, user_id: number) => {
   try {
     const [addMusic] = (await connection.query('INSERT INTO user_musics (user_id, music_id) VALUES (?, ?)', [
       user_id,
       music_id,
     ])) as RowDataPacket[];
-    if (!addMusic.affectedRows) throw createError(500, 'An error occurred, pleaze try again.');
+    if (!addMusic.affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
     if (error instanceof HttpError) throw error;
@@ -88,10 +77,10 @@ export const addOneMusicToUser = async (music_id: string, user_id: string) => {
   }
 };
 
-export const updateOneUser = async (data: Partial<UpdateUserData>, id: number) => {
+export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: number) => {
   try {
-    const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE id = ?', [
-      id,
+    const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
+      user_id,
     ])) as RowDataPacket[][];
     if (!countData[0][0].count) throw createError(403, "User doesn't exist!");
 
@@ -104,9 +93,9 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, id: number) =
 
     if (!updatedValue) throw new Error('Nothing to update.');
 
-    const update = (await connection.query(sql + ' WHERE id = ?', [...updatedValue, id])) as RowDataPacket[];
+    const update = (await connection.query(sql + ' WHERE user_id = ?', [...updatedValue, user_id])) as RowDataPacket[];
 
-    if (!update[0].affectedRows) throw createError(500, 'An error occurred, pleaze try again.');
+    if (!update[0].affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
     if (error instanceof HttpError) throw error;
@@ -116,13 +105,13 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, id: number) =
 
 export const removeOneUserById = async (id: number) => {
   try {
-    const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE id = ?', [
+    const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
       id,
     ])) as RowDataPacket[][];
     if (!userDb.count) throw createError(404, 'Error, this user doesnt exist.');
 
     const [del] = (await connection.query('DELETE FROM users WHERE id = ?', [id])) as RowDataPacket[];
-    if (!del.affectedRows) throw createError(500, 'An error occurred, pleaze try again.');
+    if (!del.affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
     if (error instanceof HttpError) throw error;
@@ -130,13 +119,13 @@ export const removeOneUserById = async (id: number) => {
   }
 };
 
-export const removeMusicFromUser = async (music_id: string, user_id: string) => {
+export const removeMusicFromUser = async (music_id: string, user_id: number) => {
   try {
     const [removeMusic] = (await connection.query('DELETE FROM user_musics WHERE user_id = ? AND music_id = ?', [
       user_id,
       music_id,
     ])) as RowDataPacket[];
-    if (!removeMusic.affectedRows) throw createError(500, 'An error occurred, pleaze try again.');
+    if (!removeMusic.affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
     if (error instanceof HttpError) throw error;

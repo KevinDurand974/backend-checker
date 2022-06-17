@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export type User = {
-  id?: number;
+  user_id?: number;
   email: string;
   name: string;
   password?: string;
@@ -9,14 +9,12 @@ export type User = {
 };
 
 export type Music = {
-  id: number;
+  music_id: number;
   title: string;
   artist: string;
   createdAt: Date;
   updatedAt: Date;
 };
-
-export type MusicKeys = keyof Music;
 
 export type UpdateUserData = {
   name: string;

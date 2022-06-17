@@ -1,6 +1,6 @@
-import { sign } from 'jsonwebtoken';
-import { hash, compare } from 'bcrypt';
 import { User } from '@types';
+import { compare, hash } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 
 export const generateAccessToken = (data: User) => {
   return sign(data, process.env.PRIVATE_KEY!);

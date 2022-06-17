@@ -1,5 +1,6 @@
 import { comparePassword, generateAccessToken, hashPassword } from '@helpers/auth';
 import { validateRegisterData } from '@helpers/validator';
+import isLogged from '@middlewares/isLogged';
 import { addOneUser, selectOneUser } from '@models/user';
 import { Router } from 'express';
 import createError from 'http-errors';
@@ -12,7 +13,7 @@ authRoute.post('/register', async (req, res, next) => {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
     const hashedPassword = await hashPassword(password!);
     const data = await addOneUser({ email, password: hashedPassword, admin: false });
-    if (!data) throw new Error('An error occurred, pleaze try again.');
+    if (!data) throw new Error('An error occurred, please try again.');
     res.status(200).json({
       status: 200,
       message: 'User successfully created!',
@@ -28,7 +29,7 @@ authRoute.post('/register/admin', async (req, res, next) => {
     const { email, password } = await validateRegisterData({ email: req.body.email, password: req.body.password });
     const hashedPassword = await hashPassword(password!);
     const data = await addOneUser({ email, password: hashedPassword, admin: true });
-    if (!data) throw new Error('An error occurred, pleaze try again.');
+    if (!data) throw new Error('An error occurred, please try again.');
     res.status(200).json({
       status: 200,
       message: 'User successfully created!',
@@ -39,12 +40,12 @@ authRoute.post('/register/admin', async (req, res, next) => {
 });
 
 // Login an User
-authRoute.post('/login', async (req, res, next) => {
+authRoute.post('/login', isLogged as any, async (req, res, next) => {
   try {
-    const { email, password, name, admin } = await selectOneUser(req.body.email);
+    const { email, password, name, admin, user_id } = await selectOneUser(req.body.email);
     const checkPassword = comparePassword(req.body.password, password);
     if (!checkPassword) throw createError(403, 'Email or password is invalid, try again.');
-    const token = generateAccessToken({ email, name, admin });
+    const token = generateAccessToken({ email, name, admin, user_id });
     res
       .cookie('ut', token, {
         httpOnly: true,

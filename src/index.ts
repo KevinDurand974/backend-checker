@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import express, { Response } from 'express';
-import morgan from 'morgan';
-import createError, { HttpError } from 'http-errors';
 import cookieParser from 'cookie-parser';
+import createError, { HttpError } from 'http-errors';
+import morgan from 'morgan';
 import connection from './connection';
-import { userRoute, authRoute, musicRoute } from '@src/routing';
+import { authRoute, musicRoute, userRoute, searchRoute } from '@src/routing';
+import admin from '@middlewares/admin';
 import auth from '@middlewares/auth';
 
 const app = express();
@@ -16,8 +17,9 @@ app.use(cookieParser());
 
 // Routing Middleware
 app.use('/api/auth', authRoute);
+app.use('/api/search', searchRoute);
 app.use('/api/user', auth as any, userRoute);
-app.use('/api/music', auth as any, musicRoute);
+app.use('/api/music', auth as any, admin as any, musicRoute);
 
 // Setup Automatic Error
 app.use((_, __, next) => {

@@ -1,7 +1,6 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import createError from 'http-errors';
-import { NextFunction, Request, Response } from 'express';
 import { PayloadRequest } from '@types';
+import { NextFunction, Response } from 'express';
+import { verify } from 'jsonwebtoken';
 
 const defaultError = {
   code: 401,
@@ -12,13 +11,14 @@ export default (req: PayloadRequest, res: Response, next: NextFunction) => {
   try {
     if (!req.cookies?.ut) throw defaultError.message;
 
-    jwt.verify(req.cookies.ut as string, process.env.PRIVATE_KEY!, (err, payload: any) => {
+    verify(req.cookies.ut as string, process.env.PRIVATE_KEY!, (err, payload: any) => {
       if (err) throw defaultError.message;
       if (!payload) throw defaultError.message;
       req.payload = {
         email: payload.email,
         name: payload.name,
         admin: payload.admin,
+        user_id: payload.user_id,
       };
       next();
     });
