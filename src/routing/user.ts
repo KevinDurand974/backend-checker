@@ -2,7 +2,7 @@ import { selectAllMusicFromUser } from '@models/music';
 import {
   addOneMusicToUser,
   removeMusicFromUser,
-  removeOneUserById,
+  removeOneUserByEmail,
   selectManyUser,
   selectOneUserByID,
   updateOneUser,
@@ -88,9 +88,10 @@ userRoute.delete('/music', async (req, res, next) => {
 });
 
 // Remove an user
-userRoute.delete('/:id', async (req, res, next) => {
+userRoute.delete('/', async (req, res, next) => {
   try {
-    const user = await removeOneUserById(+req.params.id);
+    const user = await removeOneUserByEmail(req.body.email);
+    console.log('?');
     if (!user)
       return res.status(404).json({
         status: 404,

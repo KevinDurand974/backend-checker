@@ -12,8 +12,8 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(morgan('dev'));
 
 // Routing Middleware
 app.use('/api/auth', authRoute);

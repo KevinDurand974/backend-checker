@@ -9,9 +9,14 @@ const defaultError = {
 
 export default (req: PayloadRequest, res: Response, next: NextFunction) => {
   try {
-    if (!req.cookies?.ut) throw defaultError.message;
+    let token: string;
+    // Must be use header / Authorization for Vitest
+    if (req.headers?.authorization) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (!req.cookies?.ut) throw defaultError.message;
+    else token = req.cookies.ut;
 
-    verify(req.cookies.ut as string, process.env.PRIVATE_KEY!, (err, payload: any) => {
+    verify(token as string, process.env.PRIVATE_KEY!, (err, payload: any) => {
       if (err) throw defaultError.message;
       if (!payload) throw defaultError.message;
       req.payload = {

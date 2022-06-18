@@ -10,7 +10,7 @@ export const selectOneUser = async (email: string) => {
       'SELECT COUNT(*) as count, email, password, name, user_id, admin FROM users WHERE email = ?',
       [email]
     )) as RowDataPacket[][];
-    if (!countData[0][0].count) throw createError(403, "User doesn't exist!");
+    if (!countData[0][0].count) throw createError(404, "User doesn't exist!");
     delete countData[0][0].count;
     return countData[0][0];
   } catch (error: any) {
@@ -88,7 +88,7 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: numb
     const countData = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
       user_id,
     ])) as RowDataPacket[][];
-    if (!countData[0][0].count) throw createError(403, "User doesn't exist!");
+    if (!countData[0][0].count) throw createError(404, "User doesn't exist!");
 
     const updatedValue = [];
     let sql = 'UPDATE users SET';
@@ -110,14 +110,15 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: numb
 };
 
 // Remove an user
-export const removeOneUserById = async (id: number) => {
+export const removeOneUserByEmail = async (email: string) => {
   try {
-    const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE user_id = ?', [
-      id,
+    console.log(email);
+    const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE email = ?', [
+      email,
     ])) as RowDataPacket[][];
     if (!userDb.count) throw createError(404, 'Error, this user doesnt exist.');
 
-    const [del] = (await connection.query('DELETE FROM users WHERE user_id = ?', [id])) as RowDataPacket[];
+    const [del] = (await connection.query('DELETE FROM users WHERE email = ?', [email])) as RowDataPacket[];
     if (!del.affectedRows) throw createError(500, 'An error occurred, please try again.');
     return true;
   } catch (error: any) {
