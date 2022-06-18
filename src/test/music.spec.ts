@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import axios from 'axios';
-import { adminUser, getAuthorization, simpleUser, sleep, url } from './data';
+import { adminUser, getAuthorization, simpleUser, url } from './data';
 import { Music } from '@types';
 
 axios.defaults.baseURL = url;
