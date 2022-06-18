@@ -112,7 +112,6 @@ export const updateOneUser = async (data: Partial<UpdateUserData>, user_id: numb
 // Remove an user
 export const removeOneUserByEmail = async (email: string) => {
   try {
-    console.log(email);
     const [[userDb]] = (await connection.query('SELECT COUNT(*) as count FROM users WHERE email = ?', [
       email,
     ])) as RowDataPacket[][];
@@ -134,7 +133,7 @@ export const removeMusicFromUser = async (music_id: string, user_id: number) => 
       'SELECT COUNT(*) as count FROM user_musics WHERE user_id = ? AND music_id = ?',
       [user_id, music_id]
     )) as RowDataPacket[][];
-    if (!umDb.count) throw createError(404, 'Error, this user doesnt exist.');
+    if (!umDb.count) throw createError(404, 'Error, this user doesnt have any music.');
 
     const [removeMusic] = (await connection.query('DELETE FROM user_musics WHERE user_id = ? AND music_id = ?', [
       user_id,

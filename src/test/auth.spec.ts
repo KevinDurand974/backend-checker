@@ -59,7 +59,6 @@ describe('auth', () => {
         expect(res.status).toBe(200);
         expect(res.data).toHaveProperty('message', 'User removed!');
       } catch (err: any) {
-        console.error(err.message);
         expect(err.response.status).not.toBe(401);
       }
     });
@@ -84,7 +83,6 @@ describe('auth', () => {
         expect(res.status).toBe(200);
         expect(res.data).toHaveProperty('message', 'User removed!');
       } catch (err: any) {
-        console.error(err.message);
         expect(err.response.status).not.toBe(401);
       }
     });

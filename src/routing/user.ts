@@ -91,7 +91,6 @@ userRoute.delete('/music', async (req, res, next) => {
 userRoute.delete('/', async (req, res, next) => {
   try {
     const user = await removeOneUserByEmail(req.body.email);
-    console.log('?');
     if (!user)
       return res.status(404).json({
         status: 404,

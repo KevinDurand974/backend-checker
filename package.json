@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts --config",
     "start:build": "nodemon src/index.js --config",
     "build": "tsc",
-    "test": "vitest --reporter verbose --ui"
+    "test": "vitest run --reporter verbose"
   },
   "author": "KevinDurand974",
   "license": "MIT",
