@@ -20,6 +20,11 @@ export const registerAdminUser = {
   password: 'Azerty01',
 };
 
+export const registerTestUser = {
+  email: 'creator@test.fr',
+  password: 'Azerty12',
+};
+
 export const unknownUser = {
   email: 'unknown@test.fr',
   password: 'Azerty01',

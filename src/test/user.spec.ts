@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import axios from 'axios';
-import { adminUser, getAuthorization, registerSimpleUser, simpleUser, url } from './data';
+import { adminUser, getAuthorization, registerTestUser, simpleUser, url } from './data';
 
 axios.defaults.baseURL = url;
 
@@ -104,11 +104,11 @@ describe('User', () => {
 
     test('Create and Delete user', async () => {
       try {
-        await axios.post(`/auth/register`, registerSimpleUser);
+        await axios.post(`/auth/register`, registerTestUser);
         const logged = await axios.post(`/auth/login`, adminUser);
         const del = await axios.delete(`/user`, {
           headers: getAuthorization(logged),
-          data: { email: registerSimpleUser.email },
+          data: { email: registerTestUser.email },
         });
         expect(del.status).toBe(200);
         expect(del.data).not.toHaveProperty('data');

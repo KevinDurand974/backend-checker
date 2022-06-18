@@ -4,7 +4,7 @@ import { Router } from 'express';
 const searchRoute = Router();
 
 // search a music
-searchRoute.get('/', async (req, res, next) => {
+searchRoute.post('/', async (req, res, next) => {
   try {
     const musics = await selectMusicBySearch(req.body.search);
     if (!musics.length)
