@@ -284,6 +284,6 @@ pnpm run test
 
 ## Test output
 
-![preview test](https://i.imgur.com/2CrsRbk.png)
+https://user-images.githubusercontent.com/89908055/174488875-57d80a86-a0d4-4b08-babf-89093bbfe704.mp4
 
 <a href="#top"><< TOP >></a>
