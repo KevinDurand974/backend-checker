@@ -280,4 +280,10 @@ pnpm run test
   </tbody>
 </table>
 
+- - -
+
+## Test output
+
+![preview test](https://i.imgur.com/giHb1vc.png)
+
 <a href="#top"><< TOP >></a>
