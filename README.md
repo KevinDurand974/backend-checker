@@ -284,6 +284,6 @@ pnpm run test
 
 ## Test output
 
-![preview test](https://i.imgur.com/giHb1vc.png)
+![preview test](https://i.imgur.com/2CrsRbk.png)
 
 <a href="#top"><< TOP >></a>
